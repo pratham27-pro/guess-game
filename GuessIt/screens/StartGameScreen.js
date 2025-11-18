@@ -1,7 +1,37 @@
-import { StyleSheet, TextInput, View } from "react-native";
+import { Alert, StyleSheet, TextInput, View } from "react-native";
 import PrimaryButton from "../components/PrimaryButton";
+import { useState } from "react";
+import Colors from "../constants/colors";
 
 function StartGameScreen() {
+    const [enteredNumber, setEnteredNumber] = useState("");
+
+    function numberInputHandler(enteredNumber) {
+        setEnteredNumber(enteredNumber);
+    }
+
+    function resetInputHandler() {
+        setEnteredNumber("");
+    }
+
+    function confirmInputHandler(enteredNumber) {
+        const chosenNumber = parseInt(enteredNumber);
+
+        if (isNaN(chosenNumber) || chosenNumber <= 0 || chosenNumber > 99) {
+            Alert.alert(
+                "Invalid Number!",
+                "Number has to be between 1 and 99.",
+                [
+                    {
+                        text: "Okay",
+                        style: "destructive",
+                        onPress: resetInputHandler,
+                    },
+                ]
+            );
+            return;
+        }
+    }
     return (
         <View style={styles.inputContainer}>
             <TextInput
@@ -10,14 +40,20 @@ function StartGameScreen() {
                 keyboardType="number-pad"
                 autoCapitalize="none"
                 autoCorrect={false}
+                onChangeText={numberInputHandler}
+                value={enteredNumber}
             />
             <View style={styles.buttonsContainer}>
                 <View style={styles.buttonsContainer}>
-                    <PrimaryButton>Reset</PrimaryButton>
+                    <PrimaryButton onPress={resetInputHandler}>
+                        Reset
+                    </PrimaryButton>
                 </View>
 
                 <View style={styles.buttonsContainer}>
-                    <PrimaryButton>Confirm</PrimaryButton>
+                    <PrimaryButton onPress={confirmInputHandler}>
+                        Confirm
+                    </PrimaryButton>
                 </View>
             </View>
         </View>
@@ -32,7 +68,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         marginTop: 100,
         padding: 16,
-        backgroundColor: "#4e0329",
+        backgroundColor: Colors.primary800,
         marginHorizontal: 24,
         borderRadius: 8,
         elevation: 4,
@@ -46,9 +82,9 @@ const styles = StyleSheet.create({
         height: 50,
         width: 50,
         fontSize: 32,
-        borderBottomColor: "#ddb52f",
+        borderBottomColor: Colors.accent500,
         borderBottomWidth: 2,
-        color: "#ddb52f",
+        color: Colors.accent500,
         marginVertical: 8,
         fontWeight: "bold",
         textAlign: "center",
